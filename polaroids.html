@@ -86,20 +86,21 @@
             max-width: 90vw; /* Responsive */
             box-sizing: border-box;
         }
-        #nextPartLink {
+        #endText {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 10px 20px;
-            background-color: #007bff;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0,0,0,0.8);
             color: white;
-            text-decoration: none;
-            border-radius: 5px;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 10;
+            font-size: 18px;
             display: none;
-            z-index: 11;
-        }
-        #nextPartLink:hover {
-            background-color: #0056b3;
+            max-width: 90vw; /* Responsive */
+            box-sizing: border-box;
         }
         /* Mobile-specific adjustments */
         @media (max-width: 768px) {
@@ -114,15 +115,9 @@
             .polaroid p {
                 font-size: 12px; /* Smaller text */
             }
-            .explanation, #startText {
+            .explanation, #startText, #endText {
                 padding: 15px; /* Less padding */
                 font-size: 16px; /* Smaller font for start text */
-            }
-            #nextPartLink {
-                bottom: 10px;
-                right: 10px;
-                padding: 8px 15px;
-                font-size: 14px;
             }
         }
     </style>
@@ -131,7 +126,7 @@
     <div id="startText">Click anywhere to move forward</div>
     <div id="container"></div>
     <div id="explanation" class="explanation"></div>
-    <a id="nextPartLink" href="cake.html">Move to Next Part</a>
+    <div id="endText">Click anywhere to move forward</div>
 
     <script>
         const polaroids = [
@@ -160,10 +155,11 @@
         let currentIndex = 0;
         let started = false;
         let waitingForNext = false;
+        let finished = false;
         const container = document.getElementById('container');
         const explanationDiv = document.getElementById('explanation');
         const startText = document.getElementById('startText');
-        const nextPartLink = document.getElementById('nextPartLink');
+        const endText = document.getElementById('endText');
 
         function showPolaroid(index) {
             const polaroid = document.createElement('div');
@@ -172,11 +168,9 @@
                 <img src="${polaroids[index].image}" alt="Polaroid ${index + 1}">
                 <p>Polaroid ${index + 1}</p>
             `;
-            // Adjust positioning to stay within bounds, especially on mobile
-            const maxLeft = window.innerWidth < 768 ? 50 : 60; // Less spread on mobile
-            const maxTop = window.innerHeight < 768 ? 50 : 60;
-            polaroid.style.left = `${Math.random() * maxLeft + 10}%`; // Start from 10% to avoid edges
-            polaroid.style.top = `${Math.random() * maxTop + 10}%`;
+            // Spread out more: use 10-90% range for better distribution
+            polaroid.style.left = `${Math.random() * 80 + 10}%`;
+            polaroid.style.top = `${Math.random() * 80 + 10}%`;
             polaroid.addEventListener('click', () => {
                 explanationDiv.textContent = polaroids[index].explanation;
                 explanationDiv.classList.add('show');
@@ -185,7 +179,8 @@
                     if (currentIndex < polaroids.length - 1) {
                         waitingForNext = true;
                     } else {
-                        nextPartLink.style.display = 'block'; // Show link after last polaroid
+                        finished = true;
+                        endText.style.display = 'block';
                     }
                 }, 3000); // Show explanation for 3 seconds
             });
@@ -203,11 +198,10 @@
                 if (currentIndex < polaroids.length) {
                     showPolaroid(currentIndex);
                 }
+            } else if (finished) {
+                window.location.href = 'cake.html';
             }
         });
-
-        // No JavaScript event listener needed for the link; it's handled by the href
     </script>
 </body>
 </html>
-
