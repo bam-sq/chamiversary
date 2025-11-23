@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polaroid Pop-Up Experience</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            cursor: pointer; /* Indicate clickable */
+        }
+        #container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        .polaroid {
+            position: absolute;
+            background-color: white;
+            border: 10px solid white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            padding: 10px;
+            transform: rotate(-5deg);
+            cursor: pointer;
+            transition: transform 0.5s ease;
+            opacity: 0;
+            animation: popIn 0.5s forwards;
+        }
+        .polaroid img {
+            width: 200px;
+            height: 200px;
+            display: block;
+        }
+        .polaroid p {
+            text-align: center;
+            margin: 10px 0 0 0;
+            font-size: 14px;
+            color: #333;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0) rotate(-5deg); opacity: 0; }
+            100% { transform: scale(1) rotate(-5deg); opacity: 1; }
+        }
+        .explanation {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0,0,0,0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+            z-index: 10;
+        }
+        .explanation.show {
+            display: block;
+        }
+        #startText {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0,0,0,0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 10;
+            font-size: 18px;
+        }
+        #nextPartLink {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            display: none;
+            z-index: 11;
+        }
+        #nextPartLink:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div id="startText">Click anywhere to move forward</div>
+    <div id="container"></div>
+    <div id="explanation" class="explanation"></div>
+    <a id="nextPartLink" href="cake.html">Move to Next Part</a>
+
+    <script>
+        const polaroids = [
+            {
+                image: 'images/image1.jpg',
+                explanation: 'Here\'s a pic from your debut, where we danced for the first time.'
+            },
+            {
+                image: 'images/image3.jpg',
+                explanation: 'Here\'s a pic from our graduation.'
+            },
+            {
+                image: 'images/image4.jpeg',
+                explanation: 'Here\'s a pic from one of our last dates before college started.'
+            },
+            {
+                image: 'images/image5.jpeg',
+                explanation: 'This is a pic I loved from our gradball.'
+            },
+            {
+                image: 'images/image6.jpeg',
+                explanation: 'And here\'s a pic from the day I asked if I could court you, which was also my first time baking.'
+            }
+        ];
+
+
+        let currentIndex = 0;
+        let started = false;
+        let waitingForNext = false;
+        const container = document.getElementById('container');
+        const explanationDiv = document.getElementById('explanation');
+        const startText = document.getElementById('startText');
+        const nextPartLink = document.getElementById('nextPartLink');
+
+        function showPolaroid(index) {
+            const polaroid = document.createElement('div');
+            polaroid.className = 'polaroid';
+            polaroid.innerHTML = `
+                <img src="${polaroids[index].image}" alt="Polaroid ${index + 1}">
+                <p>Polaroid ${index + 1}</p>
+            `;
+            polaroid.style.left = `${Math.random() * 60 + 20}%`;
+            polaroid.style.top = `${Math.random() * 60 + 20}%`;
+            polaroid.addEventListener('click', () => {
+                explanationDiv.textContent = polaroids[index].explanation;
+                explanationDiv.classList.add('show');
+                setTimeout(() => {
+                    explanationDiv.classList.remove('show');
+                    if (currentIndex < polaroids.length - 1) {
+                        waitingForNext = true;
+                    } else {
+                        nextPartLink.style.display = 'block'; // Show link after last polaroid
+                    }
+                }, 3000); // Show explanation for 3 seconds
+            });
+            container.appendChild(polaroid);
+        }
+
+        document.body.addEventListener('click', () => {
+            if (!started) {
+                started = true;
+                startText.style.display = 'none';
+                showPolaroid(currentIndex);
+            } else if (waitingForNext) {
+                waitingForNext = false;
+                currentIndex++;
+                if (currentIndex < polaroids.length) {
+                    showPolaroid(currentIndex);
+                }
+            }
+        });
+
+        // No JavaScript event listener needed for the link; it's handled by the href
+    </script>
+</body>
+</html>

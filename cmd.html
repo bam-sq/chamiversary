@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Command Prompt Message with Typing Animation</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+            cursor: pointer; /* Indicate clickable after typing */
+        }
+        .terminal {
+            background-color: #000;
+            border: 1px solid #00ff00;
+            padding: 10px;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+        #output {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.2em;
+            background-color: #00ff00;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <div id="output"></div>
+    </div>
+
+    <script>
+        const lines = [
+            "> Dear Chami...",
+            "> It's November 23, 2025",
+            "> Happy first anniversary!",
+            "> It has been 654 days since we started chatting"
+        ];
+
+        const output = document.getElementById('output');
+        let lineIndex = 0;
+        let charIndex = 0;
+        let typingSpeed = 100; // milliseconds per character
+
+        function typeWriter() {
+            if (lineIndex < lines.length) {
+                const currentLine = lines[lineIndex];
+                if (charIndex < currentLine.length) {
+                    output.innerHTML += currentLine.charAt(charIndex);
+                    charIndex++;
+                    setTimeout(typeWriter, typingSpeed);
+                } else {
+                    output.innerHTML += '\n';
+                    lineIndex++;
+                    charIndex = 0;
+                    setTimeout(typeWriter, 500); // Pause between lines
+                }
+            } else {
+                // Add the new line after typing is complete
+                output.innerHTML += '> Press "enter" or click the screen to move to the next page\n';
+                // Add blinking cursor at the end
+                output.innerHTML += '<span class="cursor"></span>';
+                // Function to handle redirect
+                function redirectToNext() {
+                    window.location.href = 'polaroids.html';
+                }
+                // Add event listener for Enter key
+                document.addEventListener('keydown', function(event) {
+                    if (event.key === 'Enter') {
+                        redirectToNext();
+                    }
+                });
+                // Add event listener for click anywhere on the screen
+                document.addEventListener('click', redirectToNext);
+            }
+        }
+
+        // Start the animation
+        typeWriter();
+    </script>
+</body>
+</html>

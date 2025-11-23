@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Anniversary!</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="anniversary-message">Happy first anniversary baby!!</div>
+    <div class="cake" id="cake">
+        <div class="layer top-layer"></div>
+        <div class="layer middle-layer"></div>
+        <div class="layer bottom-layer"></div>
+        <div class="frosting"></div>
+        <div class="candle candle1">
+            <div class="flame"></div>
+        </div>
+        <div class="candle candle2">
+            <div class="flame"></div>
+        </div>
+        <div class="candle candle3">
+            <div class="flame"></div>
+        </div>
+    </div>
+
+    <script>
+        const cake = document.getElementById('cake');
+        cake.addEventListener('click', function() {
+            cake.classList.add('blown-out');
+        });
+    </script>
+</body>
+</html>
