@@ -33,10 +33,14 @@
             transition: transform 0.5s ease;
             opacity: 0;
             animation: popIn 0.5s forwards;
+            max-width: 90vw; /* Ensure it doesn't exceed screen width */
+            max-height: 90vh; /* Ensure it doesn't exceed screen height */
         }
         .polaroid img {
-            width: 200px;
-            height: 200px;
+            width: 100%; /* Make image responsive */
+            height: auto; /* Maintain aspect ratio */
+            max-width: 200px; /* Cap at 200px on larger screens */
+            max-height: 200px;
             display: block;
         }
         .polaroid p {
@@ -61,6 +65,8 @@
             text-align: center;
             display: none;
             z-index: 10;
+            max-width: 90vw; /* Responsive on mobile */
+            box-sizing: border-box;
         }
         .explanation.show {
             display: block;
@@ -77,6 +83,8 @@
             text-align: center;
             z-index: 10;
             font-size: 18px;
+            max-width: 90vw; /* Responsive */
+            box-sizing: border-box;
         }
         #nextPartLink {
             position: fixed;
@@ -92,6 +100,30 @@
         }
         #nextPartLink:hover {
             background-color: #0056b3;
+        }
+        /* Mobile-specific adjustments */
+        @media (max-width: 768px) {
+            .polaroid {
+                padding: 5px; /* Reduce padding on mobile */
+                border: 5px solid white; /* Thinner border */
+            }
+            .polaroid img {
+                max-width: 150px; /* Smaller images on mobile */
+                max-height: 150px;
+            }
+            .polaroid p {
+                font-size: 12px; /* Smaller text */
+            }
+            .explanation, #startText {
+                padding: 15px; /* Less padding */
+                font-size: 16px; /* Smaller font for start text */
+            }
+            #nextPartLink {
+                bottom: 10px;
+                right: 10px;
+                padding: 8px 15px;
+                font-size: 14px;
+            }
         }
     </style>
 </head>
@@ -109,7 +141,7 @@
             },
             {
                 image: 'images/image3.jpg',
-                explanation: 'Here\'s a pic from our graduation.'
+                explanation: 'Here\'s a pic from our graduation, and one of our last days in MaSci.'
             },
             {
                 image: 'images/image4.jpeg',
@@ -117,14 +149,13 @@
             },
             {
                 image: 'images/image5.jpeg',
-                explanation: 'This is a pic I loved from our gradball.'
+                explanation: 'This is a pic I loved from our gradball, where I gave you my first ever bouquet of flowers.'
             },
             {
                 image: 'images/image6.jpeg',
                 explanation: 'And here\'s a pic from the day I asked if I could court you, which was also my first time baking.'
             }
         ];
-
 
         let currentIndex = 0;
         let started = false;
@@ -141,8 +172,11 @@
                 <img src="${polaroids[index].image}" alt="Polaroid ${index + 1}">
                 <p>Polaroid ${index + 1}</p>
             `;
-            polaroid.style.left = `${Math.random() * 60 + 20}%`;
-            polaroid.style.top = `${Math.random() * 60 + 20}%`;
+            // Adjust positioning to stay within bounds, especially on mobile
+            const maxLeft = window.innerWidth < 768 ? 50 : 60; // Less spread on mobile
+            const maxTop = window.innerHeight < 768 ? 50 : 60;
+            polaroid.style.left = `${Math.random() * maxLeft + 10}%`; // Start from 10% to avoid edges
+            polaroid.style.top = `${Math.random() * maxTop + 10}%`;
             polaroid.addEventListener('click', () => {
                 explanationDiv.textContent = polaroids[index].explanation;
                 explanationDiv.classList.add('show');
